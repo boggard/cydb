@@ -1,6 +1,7 @@
 plugins {
 	id 'org.springframework.boot' version '2.1.2.RELEASE'
 	id 'java'
+	id 'antlr'
 }
 
 apply plugin: 'io.spring.dependency-management'
@@ -16,5 +17,12 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
+
+	antlr 'org.antlr:antlr4:4.5'
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+generateGrammarSource {
+	arguments += ["-package", "com.github.boggard.cydb.antlr"]
 }
