@@ -27,5 +27,5 @@ dependencies {
 }
 
 generateGrammarSource {
-	arguments += ["-package", "com.github.boggard.cydb.antlr"]
+	arguments += ["-package", "com.github.boggard.cydb"]
 }

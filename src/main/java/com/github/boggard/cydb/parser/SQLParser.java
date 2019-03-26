@@ -1,8 +1,8 @@
 package com.github.boggard.cydb.parser;
 
-import com.github.boggard.cydb.antlr.SqlLexer;
-import com.github.boggard.cydb.antlr.SqlListener;
-import com.github.boggard.cydb.antlr.SqlParser;
+import com.github.boggard.cydb.SqlLexer;
+import com.github.boggard.cydb.SqlListener;
+import com.github.boggard.cydb.SqlParser;
 import lombok.experimental.UtilityClass;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CommonTokenStream;
