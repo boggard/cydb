@@ -277,7 +277,7 @@ vacuum_stmt
  ;
 
 column_def
- : column_name ( column_constraint | type_name )*
+ : column_name type_name (column_constraint)*
  ;
 
 type_name
@@ -792,7 +792,7 @@ K_AND : A N D;
 K_AS : A S;
 K_ASC : A S C;
 K_ATTACH : A T T A C H;
-K_AUTOINCREMENT : A U T O I N C R E M E N T;
+K_AUTOINCREMENT : A U T O '_' I N C R E M E N T;
 K_BEFORE : B E F O R E;
 K_BEGIN : B E G I N;
 K_BETWEEN : B E T W E E N;
