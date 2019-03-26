@@ -1,0 +1,10 @@
+package com.github.boggard.cydb.model
+
+global java.util.Collection errors;
+
+rule "COLUMN-01"
+when
+    $col : Column(nullableModifier == null)
+then
+    errors.add("Missed nullable modifier");
+end

@@ -6,7 +6,6 @@ import org.kie.api.builder.KieBuilder;
 import org.kie.api.builder.KieFileSystem;
 import org.kie.api.builder.KieRepository;
 import org.kie.api.runtime.KieContainer;
-import org.kie.api.runtime.KieSession;
 import org.kie.internal.io.ResourceFactory;
 import org.kie.spring.KModuleBeanFactoryPostProcessor;
 import org.springframework.context.annotation.Bean;
@@ -41,11 +40,6 @@ public class DroolsConfig {
     @Bean
     public KieBase kieBase() {
         return kieContainer().getKieBase();
-    }
-
-    @Bean
-    public KieSession kieSession() {
-        return kieContainer().newKieSession();
     }
 
     @Bean
