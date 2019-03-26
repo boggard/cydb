@@ -18,8 +18,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 
+	implementation 'org.drools:drools-core:7.18.0.Final'
+	implementation 'org.kie:kie-spring:7.18.0.Final'
+
 	antlr 'org.antlr:antlr4:4.5'
-	
+
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
