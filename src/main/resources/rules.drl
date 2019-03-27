@@ -1,10 +1,17 @@
 package com.github.boggard.cydb.model
 
-global java.util.Collection errors;
+global com.github.boggard.cydb.dto.AnalyzeResult res;
+
+rule "TABLE-01"
+when
+    $table : Table(primaryKey == null)
+then
+    res.putError($table.getLine(), "Table without primary key");
+end
 
 rule "COLUMN-01"
 when
     $col : Column(nullableModifier == null)
 then
-    errors.add("Missed nullable modifier");
+    res.putError($col.getLine(), "Missed nullable modifier");
 end
