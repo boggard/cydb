@@ -41,6 +41,7 @@ error
    }
  ;
 
+
 sql_stmt_list
  : ';'* sql_stmt ( ';'+ sql_stmt )* ';'*
  ;
@@ -673,7 +674,7 @@ keyword
 
 //[a-zA-Z_0-9\t \-\[\]\=]+
 unknown
- : .+
+ : UNEXPECTED_CHAR+
  ;
 
 name
@@ -947,7 +948,7 @@ SPACES
  ;
 
 UNEXPECTED_CHAR
- : .
+ : ~';'
  ;
 
 fragment DIGIT : [0-9];
