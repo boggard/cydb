@@ -28,4 +28,5 @@ dependencies {
 
 generateGrammarSource {
 	arguments += ["-package", "com.github.boggard.cydb"]
+	outputDirectory = new File(buildDir.toString() + "/generated-src/antlr/main/com/github/boggard/cydb/")
 }

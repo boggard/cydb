@@ -1,7 +1,7 @@
 package com.github.boggard.cydb.parser;
 
-import com.github.boggard.cydb.SqlBaseListener;
 import com.github.boggard.cydb.SqlParser;
+import com.github.boggard.cydb.SqlParserBaseListener;
 import com.github.boggard.cydb.model.Column;
 import com.github.boggard.cydb.model.Table;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Getter;
 import java.util.LinkedList;
 import java.util.List;
 
-public class TableListener extends SqlBaseListener {
+public class TableListener extends SqlParserBaseListener {
 
     @Getter
     private final List<Table> tables = new LinkedList<>();
@@ -18,58 +18,49 @@ public class TableListener extends SqlBaseListener {
     private Column column;
 
     @Override
-    public void enterCreate_table_stmt(SqlParser.Create_table_stmtContext ctx) {
+    public void enterColumnCreateTable(SqlParser.ColumnCreateTableContext ctx) {
         table = new Table(ctx.start.getLine());
+        table.setName(ctx.tableName().getText());
     }
 
     @Override
-    public void exitCreate_table_stmt(SqlParser.Create_table_stmtContext ctx) {
+    public void exitColumnCreateTable(SqlParser.ColumnCreateTableContext ctx) {
         tables.add(table);
     }
 
     @Override
-    public void enterColumn_def(SqlParser.Column_defContext ctx) {
+    public void enterColumnDeclaration(SqlParser.ColumnDeclarationContext ctx) {
         column = new Column(ctx.start.getLine());
-        column.setName(ctx.column_name().getText());
+        column.setName(ctx.uid().getText());
     }
 
     @Override
-    public void exitColumn_def(SqlParser.Column_defContext ctx) {
+    public void exitColumnDeclaration(SqlParser.ColumnDeclarationContext ctx) {
         table.addColumn(column);
     }
 
     @Override
-    public void enterType_name(SqlParser.Type_nameContext ctx) {
-        column.setType(ctx.getText());
+    public void enterColumnDefinition(SqlParser.ColumnDefinitionContext ctx) {
+        column.setType(ctx.dataType().getText());
     }
 
     @Override
-    public void enterColumn_constraint_not_null(SqlParser.Column_constraint_not_nullContext ctx) {
-        column.setNullableModifier(ctx.getText());
+    public void enterNullColumnConstraint(SqlParser.NullColumnConstraintContext ctx) {
+        column.setNullableModifier(ctx.nullNotnull().getText());
     }
 
     @Override
-    public void enterColumn_constraint_null(SqlParser.Column_constraint_nullContext ctx) {
-        column.setNullableModifier(ctx.getText());
+    public void enterDefaultColumnConstraint(SqlParser.DefaultColumnConstraintContext ctx) {
+        column.setDefaultValue(ctx.defaultValue().getText());
     }
 
     @Override
-    public void enterColumn_default_value(SqlParser.Column_default_valueContext ctx) {
-        column.setDefaultValue(ctx.getText());
-    }
-
-    @Override
-    public void enterTable_constraint_unique(SqlParser.Table_constraint_uniqueContext ctx) {
+    public void enterUniqueKeyColumnConstraint(SqlParser.UniqueKeyColumnConstraintContext ctx) {
         column.setUniqueModifier(ctx.getText());
     }
 
     @Override
-    public void enterQualified_table_name(SqlParser.Qualified_table_nameContext ctx) {
-        table.setName(ctx.getText());
-    }
-
-    @Override
-    public void enterCollation_name(SqlParser.Collation_nameContext ctx) {
-        column.setCollationModifier(ctx.getText());
+    public void enterCollateColumnConstraint(SqlParser.CollateColumnConstraintContext ctx) {
+        column.setCollationModifier(ctx.collationName().getText());
     }
 }
