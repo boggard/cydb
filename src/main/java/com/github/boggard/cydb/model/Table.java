@@ -21,4 +21,7 @@ public class Table extends StructureElement {
     public void addColumn(Column column) {
         this.columns.add(column);
     }
+    public void addForeignKey(ForeignKey foreignKey) {
+        this.foreignKeys.add(foreignKey);
+    }
 }

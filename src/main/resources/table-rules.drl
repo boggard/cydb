@@ -1,0 +1,96 @@
+package com.github.boggard.cydb.model
+
+import java.util.List
+import java.util.LinkedList
+import java.util.HashMap
+import com.github.boggard.cydb.model.statement.altertable.AddColumnStatement
+
+global com.github.boggard.cydb.dto.AnalyzeResult res;
+
+rule "TABLE-1"
+when
+    $column1 : Column ( $name : name, $type: type.type )
+    $column2 : Column ( this != $column1 && name == $name && type.type != $type && name != "id")
+then
+    res.putError($column2.getLine(), "Fields of different types with the same name");
+end
+
+rule "TABLE-2"
+when
+    $col : ColumnDefinition( nullableModifier == null )
+then
+    res.putError($col.getLine(), "Defining a table column without specifying a nulling modifier");
+end
+
+rule "TABLE-3"
+when
+    $addColumnStmt : AddColumnStatement ( nullableModifier == "NOTNULL" && defaultValue == null)
+then
+    res.putError($addColumnStmt.getLine(), "Adding a not null column to the table without specifying a default value");
+end
+
+rule "TABLE-4"
+when
+    $table: Table()
+    $pk : PrimaryKey( columns.size() == 1 ) from $table.primaryKey
+    $col : Column( type.type != "TINYINT" && type.type != "SMALLINT" && type.type != "INT"
+                        && type.type != "BIGINT" && type.type != "NUMERIC" ) from $pk.columns.get(0)
+then
+    res.putError($col.getLine(), "Using non-numeric type for primary key");
+end
+
+rule "TABLE-5"
+when
+    $table: Table()
+    $pk : PrimaryKey() from $table.primaryKey
+    $cols : List() from collect (
+            Column( !name.startsWith("id") ) from $pk.columns )
+then
+    ((List<Column>) $cols).forEach(col -> res.putError(col.getLine(), "Invalid primary key column name"));
+end
+
+rule "TABLE-6"
+when
+    $table: Table()
+    $fkeys : List() from collect (
+                      ForeignKey( !columns.get(0).name.startsWith(referenceColumns.get(0) + "_") )
+                      from $table.foreignKeys )
+    $cols : List() from accumulate( $fk: ForeignKey() from $fkeys,
+                                        init( List cols = new LinkedList(); ),
+                                        action( cols.add($fk.getColumns().get(0)); ),
+                                        result( cols )
+                                    )
+then
+    ((List<Column>) $cols).forEach(col -> res.putError(col.getLine(), "Invalid foreign key column name"));
+end
+
+rule "TABLE-7"
+when
+    $table: Table()
+    $fkeys : List() from collect ( ForeignKey( columns.size() > 1) from $table.foreignKeys )
+then
+    ((List<ForeignKey>) $fkeys).forEach(col -> res.putError(col.getLine(), "Composite foreign key"));
+end
+
+rule "TABLE-8"
+when
+    $table : Table( primaryKey == null )
+then
+    res.putError($table.getLine(), "Table without primary key");
+end
+
+rule "TABLE-9"
+when
+    $table : Table( name matches ".*\\d.*" )
+then
+    res.putError($table.getLine(), "Using numbers in table name");
+end
+
+rule "TABLE-10"
+when
+    $table : Table( name not matches "[A-Za-z_]+" )
+then
+    res.putError($table.getLine(), "Using special characters in table name");
+end
+
+

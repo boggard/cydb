@@ -1,17 +1,16 @@
 package com.github.boggard.cydb.model;
 
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
+import java.util.LinkedList;
 import java.util.List;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
-public class PrimaryKey extends StructureElement {
-    private List<String> columns;
+public class PrimaryKey {
+    private List<Column> columns = new LinkedList<>();
     private boolean isAutoIncrement;
 
-    public PrimaryKey(int line) {
-        super(line);
+    public void addColumn(Column column) {
+        columns.add(column);
     }
 }

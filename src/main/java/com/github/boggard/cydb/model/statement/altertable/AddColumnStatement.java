@@ -1,11 +1,13 @@
-package com.github.boggard.cydb.model;
+package com.github.boggard.cydb.model.statement.altertable;
 
+import com.github.boggard.cydb.model.ColumnDefinition;
+import com.github.boggard.cydb.model.Type;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class Column extends StructureElement implements ColumnDefinition {
+public class AddColumnStatement extends AlterTableStatement implements ColumnDefinition {
     private String name;
     private Type type;
     private String nullableModifier;
@@ -13,7 +15,7 @@ public class Column extends StructureElement implements ColumnDefinition {
     private String defaultValue;
     private String collationModifier;
 
-    public Column(int line) {
+    public AddColumnStatement(int line) {
         super(line);
     }
 }

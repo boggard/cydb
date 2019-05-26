@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Getter
-public class StructureElement {
+public class StructureElement implements Element {
 
     private final int line;
 }
