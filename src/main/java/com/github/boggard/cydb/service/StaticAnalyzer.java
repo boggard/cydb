@@ -2,6 +2,7 @@ package com.github.boggard.cydb.service;
 
 import com.github.boggard.cydb.dto.AnalyzeResult;
 import com.github.boggard.cydb.model.Table;
+import com.github.boggard.cydb.parser.CaseStatementListener;
 import com.github.boggard.cydb.parser.SQLParser;
 import com.github.boggard.cydb.parser.TableListener;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,15 @@ public class StaticAnalyzer {
             kieSession.setGlobal("res", result);
 
             TableListener tableListener = new TableListener();
-            SQLParser.parseSql(multipartFile, tableListener);
+            CaseStatementListener caseStatementListener = new CaseStatementListener();
+            SQLParser.parseSql(multipartFile, tableListener, caseStatementListener);
 
             tableListener.getTables().forEach(kieSession::insert);
             tableListener.getTables().stream()
                     .map(Table::getColumns)
                     .flatMap(Collection::stream)
                     .forEach(kieSession::insert);
+            caseStatementListener.getCaseStatements().forEach(kieSession::insert);
 
             kieSession.fireAllRules();
             kieSession.dispose();

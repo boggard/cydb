@@ -7,7 +7,7 @@ import lombok.EqualsAndHashCode;
 @Data
 public class Column extends StructureElement {
     private String name;
-    private String type;
+    private Type type;
     private String nullableModifier;
     private String uniqueModifier;
     private String defaultValue;

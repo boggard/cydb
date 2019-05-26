@@ -18,6 +18,10 @@ import java.io.InputStream;
 public class SQLParser {
 
     public void parseSql(InputStreamSource inputStreamSource, SqlParserListener sqlListener) throws IOException {
+        parseSql(inputStreamSource, sqlListener);
+    }
+
+    public void parseSql(InputStreamSource inputStreamSource, SqlParserListener... sqlListeners) throws IOException {
         try (InputStream inputStream = inputStreamSource.getInputStream()) {
             ANTLRInputStream antlrInputStream = new ANTLRInputStream(inputStream);
 
@@ -27,8 +31,14 @@ public class SQLParser {
 
             ParseTree parseTree = sqlParser.root();
 
-            ParseTreeWalker walker = new ParseTreeWalker();
-            walker.walk(sqlListener, parseTree);
+            for (SqlParserListener sqlListener : sqlListeners) {
+                walkSql(parseTree, sqlListener);
+            }
         }
+    }
+
+    public void walkSql(ParseTree parseTree, SqlParserListener sqlListener) {
+        ParseTreeWalker walker = new ParseTreeWalker();
+        walker.walk(sqlListener, parseTree);
     }
 }

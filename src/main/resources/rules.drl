@@ -9,9 +9,9 @@ then
     res.putError($table.getLine(), "Table without primary key");
 end
 
-rule "COLUMN-01"
+/*rule "COLUMN-01"
 when
     $col : Column(nullableModifier == null)
 then
     res.putError($col.getLine(), "Missed nullable modifier");
-end
+end*/

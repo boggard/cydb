@@ -41,7 +41,9 @@ public class TableListener extends SqlParserBaseListener {
 
     @Override
     public void enterColumnDefinition(SqlParser.ColumnDefinitionContext ctx) {
-        column.setType(ctx.dataType().getText());
+        DataTypeListener dataTypeListener = new DataTypeListener();
+        SQLParser.walkSql(ctx.dataType(), dataTypeListener);
+        column.setType(dataTypeListener.getType());
     }
 
     @Override
