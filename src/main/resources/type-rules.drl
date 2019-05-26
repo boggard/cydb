@@ -13,7 +13,7 @@ when
                         || type.type == "VARBINARY")
                     && type.length <= 3 )
 then
-    res.putError($col.getLine(), "Using variable length types with a short maximum length");
+    res.putError($col.getLine(), drools.getRule().getName(), "Using variable length types with a short maximum length");
 end
 
 rule "TYPE-2"
@@ -23,7 +23,7 @@ when
                         || type.type == "VARBINARY")
                     && type.length == null)
 then
-    res.putError($col.getLine(), "Using variable length types without specifying size");
+    res.putError($col.getLine(), drools.getRule().getName(), "Using variable length types without specifying size");
 end
 
 rule "TYPE-3"
@@ -35,5 +35,5 @@ $valueTypeList : List( size > 1 ) from accumulate( $cr: CaseResult() from $caseS
                                     result( types )
                                 )
 then
-    res.putError($caseSmt.getLine(), "Using results with different types in CASE expressions");
+    res.putError($caseSmt.getLine(), drools.getRule().getName(), "Using results with different types in CASE expressions");
 end

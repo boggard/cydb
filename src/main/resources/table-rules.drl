@@ -12,21 +12,21 @@ when
     $column1 : Column ( $name : name, $type: type.type )
     $column2 : Column ( this != $column1 && name == $name && type.type != $type && name != "id")
 then
-    res.putError($column2.getLine(), "Fields of different types with the same name");
+    res.putError($column2.getLine(), drools.getRule().getName(), "Fields of different types with the same name");
 end
 
 rule "TABLE-2"
 when
     $col : ColumnDefinition( nullableModifier == null )
 then
-    res.putError($col.getLine(), "Defining a table column without specifying a nulling modifier");
+    res.putError($col.getLine(), drools.getRule().getName(), "Defining a table column without specifying a nulling modifier");
 end
 
 rule "TABLE-3"
 when
     $addColumnStmt : AddColumnStatement ( nullableModifier == "NOTNULL" && defaultValue == null)
 then
-    res.putError($addColumnStmt.getLine(), "Adding a not null column to the table without specifying a default value");
+    res.putError($addColumnStmt.getLine(), drools.getRule().getName(), "Adding a not null column to the table without specifying a default value");
 end
 
 rule "TABLE-4"
@@ -36,7 +36,7 @@ when
     $col : Column( type.type != "TINYINT" && type.type != "SMALLINT" && type.type != "INT"
                         && type.type != "BIGINT" && type.type != "NUMERIC" ) from $pk.columns.get(0)
 then
-    res.putError($col.getLine(), "Using non-numeric type for primary key");
+    res.putError($col.getLine(), drools.getRule().getName(), "Using non-numeric type for primary key");
 end
 
 rule "TABLE-5"
@@ -46,7 +46,7 @@ when
     $cols : List() from collect (
             Column( !name.startsWith("id") ) from $pk.columns )
 then
-    ((List<Column>) $cols).forEach(col -> res.putError(col.getLine(), "Invalid primary key column name"));
+    ((List<Column>) $cols).forEach(col -> res.putError(col.getLine(), drools.getRule().getName(), "Invalid primary key column name"));
 end
 
 rule "TABLE-6"
@@ -61,7 +61,7 @@ when
                                         result( cols )
                                     )
 then
-    ((List<Column>) $cols).forEach(col -> res.putError(col.getLine(), "Invalid foreign key column name"));
+    ((List<Column>) $cols).forEach(col -> res.putError(col.getLine(), drools.getRule().getName(), "Invalid foreign key column name"));
 end
 
 rule "TABLE-7"
@@ -69,28 +69,28 @@ when
     $table: Table()
     $fkeys : List() from collect ( ForeignKey( columns.size() > 1) from $table.foreignKeys )
 then
-    ((List<ForeignKey>) $fkeys).forEach(col -> res.putError(col.getLine(), "Composite foreign key"));
+    ((List<ForeignKey>) $fkeys).forEach(col -> res.putError(col.getLine(), drools.getRule().getName(), "Composite foreign key"));
 end
 
 rule "TABLE-8"
 when
     $table : Table( primaryKey == null )
 then
-    res.putError($table.getLine(), "Table without primary key");
+    res.putError($table.getLine(), drools.getRule().getName(), "Table without primary key");
 end
 
 rule "TABLE-9"
 when
     $table : Table( name matches ".*\\d.*" )
 then
-    res.putError($table.getLine(), "Using numbers in table name");
+    res.putError($table.getLine(), drools.getRule().getName(), "Using numbers in table name");
 end
 
 rule "TABLE-10"
 when
     $table : Table( name not matches "[A-Za-z_]+" )
 then
-    res.putError($table.getLine(), "Using special characters in table name");
+    res.putError($table.getLine(), drools.getRule().getName(), "Using special characters in table name");
 end
 
 

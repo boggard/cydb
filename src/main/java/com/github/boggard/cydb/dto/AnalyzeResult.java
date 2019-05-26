@@ -10,11 +10,11 @@ import java.util.Map;
 @Value
 public class AnalyzeResult {
 
-    private Map<Integer, List<String>> linesError = new HashMap<>();
+    private Map<Integer, List<LineError>> linesError = new HashMap<>();
 
-    public void putError(int line, String error) {
-        List<String> errors = linesError.getOrDefault(line, new LinkedList<>());
-        errors.add(error);
+    public void putError(int line, String ruleId, String message) {
+        List<LineError> errors = linesError.getOrDefault(line, new LinkedList<>());
+        errors.add(new LineError(ruleId, message));
         linesError.put(line, errors);
     }
 }
