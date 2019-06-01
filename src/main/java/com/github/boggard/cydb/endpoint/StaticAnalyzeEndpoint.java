@@ -1,6 +1,6 @@
 package com.github.boggard.cydb.endpoint;
 
-import com.github.boggard.cydb.dto.AnalyzeResult;
+import com.github.boggard.cydb.dto.AnalyzeResultWithFile;
 import com.github.boggard.cydb.service.StaticAnalyzer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ public class StaticAnalyzeEndpoint {
     private final StaticAnalyzer staticAnalyzer;
 
     @PostMapping
-    public AnalyzeResult analyze(@RequestPart("file") MultipartFile file) {
+    public AnalyzeResultWithFile analyze(@RequestPart("file") MultipartFile file) {
         return staticAnalyzer.analyze(file);
     }
 }
