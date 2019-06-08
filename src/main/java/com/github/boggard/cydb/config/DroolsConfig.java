@@ -19,6 +19,7 @@ public class DroolsConfig {
         KieFileSystem kieFileSystem = getKieServices().newKieFileSystem();
         kieFileSystem.write(ResourceFactory.newClassPathResource("table-rules.drl", "UTF-8"));
         kieFileSystem.write(ResourceFactory.newClassPathResource("type-rules.drl", "UTF-8"));
+        kieFileSystem.write(ResourceFactory.newClassPathResource("ref-rules.drl", "UTF-8"));
         return kieFileSystem;
     }
 

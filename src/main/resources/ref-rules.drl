@@ -1,0 +1,20 @@
+package com.github.boggard.cydb.model
+import java.util.List
+
+rule "REF-1"
+when
+    $table: Table()
+    $cols : List() from collect (
+                      Column( name.startsWith("id_") )
+                      from $table.columns )
+    $fCols : List() from accumulate( $fk: ForeignKey() from $table.foreignKeys,
+                                        init( List cols = new LinkedList(); ),
+                                        action( cols.add($fk.getColumns().get(0)); ),
+                                        result( cols )
+                                    )
+    $invalidColumns: List() from collect (
+        Column( $fCols not contains this )
+     from $cols )
+then
+    ((List<Column>) $invalidColumns).forEach(col -> res.putBug(col.getLine(), drools.getRule().getName(), "Foreign key possible should exist"));
+end
